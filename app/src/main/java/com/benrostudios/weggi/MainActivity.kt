@@ -4,6 +4,7 @@ import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         weggiTask().execute()
+        loadFrag(home_frag())
 
     }
 
@@ -83,5 +85,18 @@ class MainActivity : AppCompatActivity() {
                 Log.e("BESTO",e.toString())
             }
         }
+    }
+
+    private fun loadFrag(fragment: Fragment?): Boolean {
+        if (fragment != null) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.frame, fragment)
+                .commit()
+
+
+            return false
+        }
+        return true
     }
 }
