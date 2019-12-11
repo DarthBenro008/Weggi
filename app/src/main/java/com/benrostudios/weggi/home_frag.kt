@@ -58,13 +58,17 @@ class home_frag : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         Search.setOnClickListener{
-            MainActivity.henlo = nameo.text.toString()
+            MainActivity.cityo = nameo.text.toString()
             nameo.setText("")
+            MainActivity.mode = 0
             replaceFragment(disp_frag())
+
         }
         CurLock.setOnClickListener{
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mActivity)
             getLastLocation()
+            MainActivity.mode = 1
+
 
         }
     }
@@ -86,6 +90,8 @@ class home_frag : Fragment(){
                     } else {
                         latitude= location.latitude.toString()
                         longitude= location.longitude.toString()
+                        MainActivity.latlongo = mutableListOf(latitude,longitude)
+                        replaceFragment(disp_frag())
                         Log.e("LATLONG",latitude+" "+longitude)
                     }
                 }
@@ -119,6 +125,8 @@ class home_frag : Fragment(){
             var mLastLocation: Location = locationResult.lastLocation
             latitude = mLastLocation.latitude.toString()
             longitude = mLastLocation.longitude.toString()
+            MainActivity.latlongo = mutableListOf(latitude,longitude)
+            replaceFragment(disp_frag())
             Log.e("LATLONG",latitude+" "+longitude)
         }
     }
