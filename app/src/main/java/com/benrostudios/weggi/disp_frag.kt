@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.disp.*
 import org.json.JSONObject
@@ -53,12 +54,19 @@ class disp_frag : Fragment(){
         sset.setVisibility(View.INVISIBLE)
         whum.setVisibility(View.INVISIBLE)
         wpre.setVisibility(View.INVISIBLE)
-
+        update.setVisibility(View.INVISIBLE)
 
     }
 
     inner class weggiTask(modp: Int) : AsyncTask<String, Void, String>() {
         var modo = modp
+
+        fun replaceFragment(someFragment: Fragment) {
+            val transaction = fragmentManager!!.beginTransaction()
+            transaction.replace(R.id.frame, someFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
         override fun onPreExecute() {
             super.onPreExecute()
         }
@@ -120,7 +128,6 @@ class disp_frag : Fragment(){
                     SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(
                         Date(sunset * 1000)
                     )
-                val windSpeed = wind.getString("speed")
                 val weatherDescription = weather.getString("description")
                 val address = jsonObj.getString("name") + ", " + sys.getString("country")
                 val temp = main.getString("temp") + "°C"
@@ -159,6 +166,8 @@ class disp_frag : Fragment(){
                 Glide.with(mContext).load(iconUrl).apply(option).into(wView)
             }catch(e: Exception){
                 Log.e("BESTO",e.toString())
+                replaceFragment(home_frag())
+                Toast.makeText(context,"Please Input an Valid City!",Toast.LENGTH_LONG).show()
             }
         }
     }
