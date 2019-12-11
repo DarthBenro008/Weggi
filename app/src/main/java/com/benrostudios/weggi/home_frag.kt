@@ -58,10 +58,15 @@ class home_frag : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         Search.setOnClickListener{
-            MainActivity.cityo = nameo.text.toString()
-            nameo.setText("")
-            MainActivity.mode = 0
-            replaceFragment(disp_frag())
+            if(nameo.text.toString() == ""){
+                Toast.makeText(context,"Please Input a City!",Toast.LENGTH_LONG).show()
+            }
+            else {
+                MainActivity.cityo = nameo.text.toString()
+                nameo.setText("")
+                MainActivity.mode = 0
+                replaceFragment(disp_frag())
+            }
 
         }
         CurLock.setOnClickListener{
