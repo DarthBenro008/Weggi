@@ -16,7 +16,23 @@ import java.util.*
 
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SwitchFragmentInterface {
+
+    companion object{
+        lateinit var cityo: String
+        lateinit var latlongo: MutableList<String>
+        lateinit var switchInterface: SwitchFragmentInterface
+        var mode: Int = 0
+    }
+
+    override fun switchToDisplayFragment() {
+        loadFrag(disp_frag())
+    }
+
+    override fun switchToHomeFragment() {
+        loadFrag(home_frag())
+    }
+
 
 
     val CITY: String = "vellore,in"
@@ -28,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main)
         loadFrag(home_frag())
+        switchInterface = this
 
     }
 
@@ -44,9 +61,5 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
-    companion object{
-        lateinit var cityo: String
-        lateinit var latlongo: MutableList<String>
-        var mode: Int = 0
-    }
+
 }

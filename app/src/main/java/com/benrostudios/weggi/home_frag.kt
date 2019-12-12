@@ -20,6 +20,9 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
+import com.benrostudios.weggi.Data.AppDatabase
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.homepage.*
 import org.json.JSONObject
@@ -28,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class home_frag : Fragment(){
+class home_frag : Fragment() {
 
     val PERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
@@ -36,8 +39,15 @@ class home_frag : Fragment(){
     lateinit var mContext: Context
     lateinit var latitude: String
     lateinit var longitude: String
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val fragview = inflater.inflate(R.layout.homepage ,null)
+
+    data class History(val location: String, val mDate: String)
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val fragview = inflater.inflate(R.layout.homepage, null)
 
 
 
@@ -56,6 +66,40 @@ class home_frag : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        var nico = mutableListOf<History>()
+        val thread = Thread {
+            var db = Room.databaseBuilder(mContext, AppDatabase::class.java, "LocHistory").build()
+            db.historyDao().allHistory.forEach() {
+                nico.add(History(it.Location, it.dateo))
+            }
+        }
+        thread.start()
+
+
+        try {
+            thread.join()
+            recyclerView.apply {
+                layoutManager = LinearLayoutManager(activity)
+                adapter = rec_adapter(nico) {
+                    Log.i("SAY hello", "Clicked!!!!!" + it.toString())
+                    Log.i("SAY hello", nico[it].location)
+                    MainActivity.cityo = nico[it].location
+                    MainActivity.mode = 0
+                    replaceFragment(disp_frag())
+
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.i("SAY hello",e.toString())
+            Log.i("SAY hello", nico.toString())
+        }
+
+
+
+
 
         Search.setOnClickListener{
             if(nameo.text.toString() == ""){
